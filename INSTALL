@@ -1,0 +1,9 @@
+Building Platinum
+
+See doc/readme-qt.rst for instructions on building Platinum QT,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of Platinum.
+
+See doc/build-*.txt for instructions on building Platinumd,
+the intended-for-services, no-graphical-interface, reference
+implementation of Platinum.
