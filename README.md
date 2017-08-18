@@ -1,7 +1,7 @@
 Platinum [PLATINUM] integration/staging tree
 =====================================
 
-http://www.insanecoin.com
+http://plt.cash
 
 What is the Platinum [PLATINUM] Blockchain?
 ---------------------------
@@ -33,7 +33,7 @@ RPC Port: 10257
 
 BUILD LINUX
 -----------
-1) git clone https://github.com/CryptoCoderz/PLATINUM
+1) git clone https://github.com/payplatinum/platinum/
 
 2) cd PLATINUM/src
 
@@ -55,7 +55,7 @@ Development Process
 -------------------
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/CryptoCoderz/PLATINUM/tags) are created
+completely stable. [Tags](https://github.com/payplatinum/platinum//tags) are created
 regularly to indicate new official, stable release versions of Platinum [PLATINUM].
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -64,7 +64,7 @@ The developer [mailing list](https://lists.linuxfoundation.org/mailman/listinfo/
 should be used to discuss complicated or controversial changes before working
 on a patch set.
 
-Developer Slack can be found at http://insanecointeam.slack.com.
+Developer Slack can be found at http://platinumteam.slack.com.
 
 Testing
 -------
