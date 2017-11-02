@@ -35,7 +35,7 @@ BUILD LINUX
 -----------
 1) git clone https://github.com/payplatinum/platinum/
 
-2) cd PLATINUM/src
+2) cd platinum/src
 
 3) sudo make -f makefile.unix            # Headless
 
