@@ -64,7 +64,7 @@ public:
         vout.resize(1);
         vout[0].nValue = nGenesisBlockReward;
         vout[0].SetEmpty();
-        CTransaction txNew(1, 1502323200, vin, vout, 0);
+        CTransaction txNew(1, 1502323200, vin, vout, 0, "");
         genesis.vtx.push_back(txNew);
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();

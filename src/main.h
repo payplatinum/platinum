@@ -37,6 +37,10 @@ class CNode;
 class CReserveKey;
 class CWallet;
 
+/** Height to introduce comments in transactions */
+static const int HEIGHT_TXCOMMENT = 210000;
+/** Maximum length of comments in transactions (including "text:") */
+static const unsigned int MAX_TXCOMMENT_LEN = 1024;
 /** The maximum allowed multiple for the computed block size */
 static const unsigned int MAX_BLOCK_SIZE_INCREASE_MULTIPLE = 2;
 /** The number of blocks to consider in the computation of median block size */
@@ -337,12 +341,14 @@ int64_t GetMinFee(const CTransaction& tx, unsigned int nBytes, bool fAllowFree, 
 class CTransaction
 {
 public:
-    static const int CURRENT_VERSION=1;
+    static const int LEGACY_VERSION1=1; // txcomment introduced in V2
+    static const int CURRENT_VERSION=2;
     int nVersion;
     unsigned int nTime;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     unsigned int nLockTime;
+    std::string strTxComment;
 
     // Denial-of-service detection:
     mutable int nDoS;
@@ -353,8 +359,8 @@ public:
         SetNull();
     }
 
-    CTransaction(int nVersion, unsigned int nTime, const std::vector<CTxIn>& vin, const std::vector<CTxOut>& vout, unsigned int nLockTime)
-        : nVersion(nVersion), nTime(nTime), vin(vin), vout(vout), nLockTime(nLockTime), nDoS(0)
+    CTransaction(int nVersion, unsigned int nTime, const std::vector<CTxIn>& vin, const std::vector<CTxOut>& vout, unsigned int nLockTime, std::string strTxComment)
+        : nVersion(nVersion), nTime(nTime), vin(vin), vout(vout), nLockTime(nLockTime), strTxComment(strTxComment), nDoS(0)
     {
     }
 
@@ -366,15 +372,21 @@ public:
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
+        if (this->nVersion > LEGACY_VERSION1)
+            READWRITE(strTxComment);
     )
 
     void SetNull()
     {
-        nVersion = CTransaction::CURRENT_VERSION;
+        if (nBestHeight >= HEIGHT_TXCOMMENT)
+            nVersion = CTransaction::CURRENT_VERSION;
+        else
+            nVersion = CTransaction::LEGACY_VERSION1;
         nTime = GetAdjustedTime();
         vin.clear();
         vout.clear();
         nLockTime = 0;
+        strTxComment.clear();
         nDoS = 0;  // Denial-of-service prevention
     }
 
@@ -456,11 +468,20 @@ public:
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
-        return (a.nVersion  == b.nVersion &&
-                a.nTime     == b.nTime &&
-                a.vin       == b.vin &&
-                a.vout      == b.vout &&
-                a.nLockTime == b.nLockTime);
+        if (a.nVersion > LEGACY_VERSION1 || b.nVersion > LEGACY_VERSION1) {
+            return (a.nVersion     == b.nVersion &&
+                    a.nTime        == b.nTime &&
+                    a.vin          == b.vin &&
+                    a.vout         == b.vout &&
+                    a.nLockTime    == b.nLockTime &&
+                    a.strTxComment == b.strTxComment);
+        } else {
+            return (a.nVersion     == b.nVersion &&
+                    a.nTime        == b.nTime &&
+                    a.vin          == b.vin &&
+                    a.vout         == b.vout &&
+                    a.nLockTime    == b.nLockTime);
+        }
     }
 
     friend bool operator!=(const CTransaction& a, const CTransaction& b)
@@ -472,13 +493,14 @@ public:
     {
         std::string str;
         str += IsCoinBase()? "Coinbase" : (IsCoinStake()? "Coinstake" : "CTransaction");
-        str += strprintf("(hash=%s, nTime=%d, ver=%d, vin.size=%u, vout.size=%u, nLockTime=%d)\n",
+        str += strprintf("(hash=%s, nTime=%d, ver=%d, vin.size=%u, vout.size=%u, nLockTime=%d, strTxComment=%s)\n",
             GetHash().ToString(),
             nTime,
             nVersion,
             vin.size(),
             vout.size(),
-            nLockTime);
+            nLockTime,
+            strTxComment.substr(0,30).c_str());
         for (unsigned int i = 0; i < vin.size(); i++)
             str += "    " + vin[i].ToString() + "\n";
         for (unsigned int i = 0; i < vout.size(); i++)

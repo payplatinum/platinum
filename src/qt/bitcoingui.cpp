@@ -865,6 +865,8 @@ void BitcoinGUI::incomingTransaction(const QModelIndex & parent, int start, int 
                     .data().toString();
     QString address = ttm->index(start, TransactionTableModel::ToAddress, parent)
                     .data().toString();
+    QString txcomment = ttm->index(start, TransactionTableModel::TxComment, parent)
+                    .data().toString();
     QIcon icon = qvariant_cast<QIcon>(ttm->index(start,
                         TransactionTableModel::ToAddress, parent)
                     .data(Qt::DecorationRole));
@@ -875,11 +877,13 @@ void BitcoinGUI::incomingTransaction(const QModelIndex & parent, int start, int 
                           tr("Date: %1\n"
                              "Amount: %2\n"
                              "Type: %3\n"
-                             "Address: %4\n")
+                             "Address: %4\n"
+                             "TxComment: %5\n")
                           .arg(date)
                           .arg(BitcoinUnits::formatWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), amount, true))
                           .arg(type)
-                          .arg(address), icon);
+                          .arg(address)
+                          .arg(txcomment), icon);
 }
 
 void BitcoinGUI::incomingMessage(const QModelIndex & parent, int start, int end)

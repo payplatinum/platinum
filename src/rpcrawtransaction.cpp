@@ -85,6 +85,7 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
         vout.push_back(out);
     }
     entry.push_back(Pair("vout", vout));
+    entry.push_back(Pair("txcomment", tx.strTxComment));
 
     if (hashBlock != 0)
     {
@@ -234,7 +235,7 @@ Value createrawtransaction(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 2)
         throw runtime_error(
-            "createrawtransaction [{\"txid\":txid,\"vout\":n},...] {address:amount,...}\n"
+            "createrawtransaction [{\"txid\":txid,\"vout\":n},...] {address:amount,...} [\"txcomment\"]\n"
             "Create a transaction spending given inputs\n"
             "(array of objects containing transaction id and output number),\n"
             "sending to given address(es).\n"
@@ -248,6 +249,15 @@ Value createrawtransaction(const Array& params, bool fHelp)
     Object sendTo = params[1].get_obj();
 
     CTransaction rawTx;
+
+    if (params.size() > 2 && params[2].type() != null_type && !params[2].get_str().empty()) {
+        std::string strTxComment = params[2].get_str();
+        if (strTxComment.substr(0,5).compare("text:") != 0)
+            strTxComment = "text:" + strTxComment;
+        if (strTxComment.length() > MAX_TXCOMMENT_LEN)
+            strTxComment.resize(MAX_TXCOMMENT_LEN);
+        rawTx.strTxComment = strTxComment;
+    }
 
     BOOST_FOREACH(Value& input, inputs)
     {

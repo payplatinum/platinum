@@ -150,10 +150,10 @@ public:
     };
 
     // prepare transaction for getting txfee before sending coins
-    SendCoinsReturn prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl = NULL);
+    SendCoinsReturn prepareTransaction(WalletModelTransaction &transaction, QString txcomment, const CCoinControl *coinControl = NULL);
 
     // Send coins to a list of recipients
-    SendCoinsReturn sendCoins(WalletModelTransaction &transaction, const CCoinControl *coinControl);
+    SendCoinsReturn sendCoins(WalletModelTransaction &transaction, QString txcomment, const CCoinControl *coinControl);
 
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString &passphrase);

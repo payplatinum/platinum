@@ -44,6 +44,12 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 #if QT_VERSION >= 0x040700
     /* Do not move this to the XML file, Qt before 4.7 will choke on it */
     ui->lineEditCoinControlChange->setPlaceholderText(tr("Enter a Platinum address (e.g. iACLambeGgkxodKtfzM7huFXyPYWjz33Z2)"));
+    if (nBestHeight >= HEIGHT_TXCOMMENT) {
+        ui->editTxComment->setPlaceholderText(tr("Enter a transaction comment (Note: This information is public)"));
+    } else {
+        ui->editTxComment->setPlaceholderText(tr("(Note: This feature will be available at block height 210000)"));
+        ui->editTxComment->setEnabled(false);
+    }
 #endif
 
     addEntry();
@@ -228,6 +234,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     QList<SendCoinsRecipient> recipients;
     bool valid = true;
 
+    QString txcomment = ui->editTxComment->text();
+
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
@@ -309,22 +317,22 @@ void SendCoinsDialog::on_sendButton_clicked()
             fNewRecipientAllowed = true;
             return;
         }
-        send(recipients, strFee, formatted);
+        send(recipients, strFee, txcomment, formatted);
         return;
     }
     // already unlocked or not encrypted at all
-    send(recipients, strFee, formatted);
+    send(recipients, strFee, txcomment, formatted);
 }
 
-void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee, QStringList formatted)
+void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee, QString txcomment, QStringList formatted)
 {
     // prepare transaction for getting txFee earlier
     WalletModelTransaction currentTransaction(recipients);
     WalletModel::SendCoinsReturn prepareStatus;
     if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
-        prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
+        prepareStatus = model->prepareTransaction(currentTransaction, txcomment, CoinControlDialog::coinControl);
     else
-        prepareStatus = model->prepareTransaction(currentTransaction);
+        prepareStatus = model->prepareTransaction(currentTransaction, txcomment);
 
     // process prepareStatus and on error generate message shown to user
     processSendCoinsReturn(prepareStatus,
@@ -396,7 +404,7 @@ void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee,
     }
 
     // now send the prepared transaction
-    WalletModel::SendCoinsReturn sendStatus = model->sendCoins(currentTransaction, CoinControlDialog::coinControl);
+    WalletModel::SendCoinsReturn sendStatus = model->sendCoins(currentTransaction, txcomment, CoinControlDialog::coinControl);
     // process sendStatus and on error generate message shown to user
     processSendCoinsReturn(sendStatus);
 
@@ -411,6 +419,8 @@ void SendCoinsDialog::send(QList<SendCoinsRecipient> recipients, QString strFee,
 
 void SendCoinsDialog::clear()
 {
+    ui->editTxComment->clear();
+
     // Remove entries until only one left
     while(ui->entries->count())
     {
@@ -473,6 +483,9 @@ void SendCoinsDialog::removeEntry(SendCoinsEntry* entry)
 
 QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 {
+    QWidget::setTabOrder(prev, ui->editTxComment);
+    prev = ui->editTxComment;
+
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());

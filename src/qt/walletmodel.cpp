@@ -224,7 +224,7 @@ bool WalletModel::validateAddress(const QString &address)
     return addressParsed.IsValid();
 }
 
-WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, const CCoinControl *coinControl)
+WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransaction &transaction, QString txcomment, const CCoinControl *coinControl)
 {
     CAmount total = 0;
     QList<SendCoinsRecipient> recipients = transaction.getRecipients();
@@ -288,6 +288,14 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             return IXTransactionCreationFailed;
         }
 
+        // txcomment must begin with "text:".
+        std::string strTxComment = txcomment.toStdString();
+        if (!strTxComment.empty() && strTxComment.substr(0,5).compare("text:") != 0)
+            strTxComment = "text:" + strTxComment;
+        if (strTxComment.length() > MAX_TXCOMMENT_LEN)
+            strTxComment.resize(MAX_TXCOMMENT_LEN);
+        newTx->strTxComment = strTxComment;
+
         int nChangePos;
         bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, nChangePos, strFailReason, coinControl, recipients[0].inputType, recipients[0].useInstantX);
         transaction.setTransactionFee(nFeeRequired);
@@ -318,7 +326,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     return SendCoinsReturn(OK);
 }
 
-WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &transaction, const CCoinControl *coinControl)
+WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &transaction, QString txcomment, const CCoinControl *coinControl)
 {
     QByteArray transaction_array; /* store serialized transaction */
     CAmount total = 0;
@@ -474,6 +482,14 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         int64_t nFeeRequired = 0;
         int nChangePos = -1;
         std::string strFailReason;
+
+        // txcomment must begin with "text:".
+        std::string strTxComment = txcomment.toStdString();
+        if (!strTxComment.empty() && strTxComment.substr(0,5).compare("text:") != 0)
+            strTxComment = "text:" + strTxComment;
+        if (strTxComment.length() > MAX_TXCOMMENT_LEN)
+            strTxComment.resize(MAX_TXCOMMENT_LEN);
+        wtx.strTxComment = strTxComment;
 
         bool fCreated = wallet->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, nChangePos, strFailReason, coinControl, recipients[0].inputType, recipients[0].useInstantX);
         transaction.setTransactionFee(nFeeRequired);

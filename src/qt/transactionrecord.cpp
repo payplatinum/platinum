@@ -34,6 +34,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
     CAmount nDebit = wtx.GetDebit(ISMINE_ALL);
     CAmount nNet = nCredit - nDebit;
     uint256 hash = wtx.GetHash(), hashPrev = 0;
+    std::string txcomment = "";
+    if (!wtx.strTxComment.empty()) {
+        txcomment = wtx.strTxComment;
+    }
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
     if (nNet > 0 || wtx.IsCoinBase() || wtx.IsCoinStake())
@@ -48,6 +52,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             {
                 TransactionRecord sub(hash, nTime);
                 CTxDestination address;
+                sub.txcomment = txcomment;
                 sub.idx = parts.size(); // sequence number
                 sub.credit = txout.nValue;
                 sub.involvesWatchAddress = mine == ISMINE_WATCH_ONLY;
@@ -123,7 +128,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
         }
 
         if(fAllFromMeDenom && fAllToMeDenom && nFromMe * nToMe) {
-            parts.append(TransactionRecord(hash, nTime, TransactionRecord::DarksendDenominate, "", -nDebit, nCredit));
+            parts.append(TransactionRecord(hash, nTime, TransactionRecord::DarksendDenominate, "", -nDebit, nCredit, txcomment));
             parts.last().involvesWatchAddress = false;   // maybe pass to TransactionRecord as constructor argument
         }
         else if (fAllFromMe && fAllToMe)
@@ -185,6 +190,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 const CTxOut& txout = wtx.vout[nOut];
                 TransactionRecord sub(hash, nTime);
                 sub.idx = parts.size();
+                sub.txcomment = txcomment;
                 sub.involvesWatchAddress = involvesWatchAddress;
 
                 if(wallet->IsMine(txout))
@@ -229,7 +235,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
             //
             // Mixed debit transaction, can't break down payees
             //
-            parts.append(TransactionRecord(hash, nTime, TransactionRecord::Other, "", nNet, 0));
+            parts.append(TransactionRecord(hash, nTime, TransactionRecord::Other, "", nNet, 0, txcomment));
             parts.last().involvesWatchAddress = involvesWatchAddress;
         }
     }

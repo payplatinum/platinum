@@ -53,6 +53,7 @@ void WalletTxToJSON(const CWalletTx& wtx, Object& entry)
 {
     int confirms = wtx.GetDepthInMainChain(false);
     int confirmsTotal = GetIXConfirmations(wtx.GetHash()) + confirms;
+    entry.push_back(Pair("txcomment", wtx.strTxComment));
     entry.push_back(Pair("confirmations", confirmsTotal));
     entry.push_back(Pair("bcconfirmations", confirms));
     if (wtx.IsCoinBase() || wtx.IsCoinStake())
@@ -422,17 +423,18 @@ Value sendtoaddress(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 2 || params.size() > 4)
         throw runtime_error(
-            "sendtoaddress \"Platinum\" amount ( \"comment\" \"comment-to\" )\n"
+            "sendtoaddress \"Platinum\" amount ( \"comment\" \"comment-to\" \"txcomment\" )\n"
             "\nSent an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n"
             + HelpRequiringPassphrase() +
             "\nArguments:\n"
-           "1. \"Platinum\"  (string, required) The Platinum address to send to.\n"
+            "1. \"Platinum\"    (string, required) The Platinum address to send to.\n"
             "2. \"amount\"      (numeric, required) The amount in PLATINUM to send. eg 0.1\n"
             "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
             "                             This is not part of the transaction, just kept in your wallet.\n"
             "4. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
             "                             to which you're sending the transaction. This is not part of the \n"
             "                             transaction, just kept in your wallet.\n"
+            "5. \"txcomment\"   (string, optional) A transaction comment visible on chain\n"
             "\nResult:\n"
             "\"transactionid\"  (string) The transaction id.\n"
             "\nExamples:\n"
@@ -462,8 +464,16 @@ Value sendtoaddress(const Array& params, bool fHelp)
         wtx.mapValue["comment"] = params[2].get_str();
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
         wtx.mapValue["to"]      = params[3].get_str();
-    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty())
-        sNarr = params[4].get_str();
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty()) {
+        std::string strTxComment = params[4].get_str();
+        if (strTxComment.substr(0,5).compare("text:") != 0)
+            strTxComment = "text:" + strTxComment;
+        if (strTxComment.length() > MAX_TXCOMMENT_LEN)
+            strTxComment.resize(MAX_TXCOMMENT_LEN);
+        wtx.mapValue["txcomment"] = strTxComment;
+    }
+    if (params.size() > 5 && params[5].type() != null_type && !params[5].get_str().empty())
+        sNarr = params[5].get_str();
     if (sNarr.length() > 24)
         throw std::runtime_error("Narration must be 24 characters or less.");
 
@@ -874,7 +884,7 @@ Value sendfrom(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 3 || params.size() > 7)
         throw runtime_error(
-            "sendfrom \"fromaccount\" \"toPlatinum\" amount ( minconf \"comment\" \"comment-to\" )\n"
+            "sendfrom \"fromaccount\" \"toPlatinum\" amount ( minconf \"comment\" \"comment-to\" \"txcomment\" )\n"
             "\nSent an amount from an account to a Platinum address.\n"
             "The amount is a real and is rounded to the nearest 0.00000001."
             + HelpRequiringPassphrase() + "\n"
@@ -888,6 +898,7 @@ Value sendfrom(const Array& params, bool fHelp)
             "6. \"comment-to\"        (string, optional) An optional comment to store the name of the person or organization \n"
             "                                     to which you're sending the transaction. This is not part of the transaction, \n"
             "                                     it is just kept in your wallet.\n"
+            "7. \"txcomment\"         (string, optional) A transaction comment visible on chain\n"
             "\nResult:\n"
             "\"transactionid\"        (string) The transaction id.\n"
             "\nExamples:\n"
@@ -918,10 +929,18 @@ Value sendfrom(const Array& params, bool fHelp)
         wtx.mapValue["comment"] = params[4].get_str();
     if (params.size() > 5 && params[5].type() != null_type && !params[5].get_str().empty())
         wtx.mapValue["to"]      = params[5].get_str();
+    if (params.size() > 6 && params[6].type() != null_type && !params[6].get_str().empty()) {
+        std::string strTxComment = params[6].get_str();
+        if (strTxComment.substr(0,5).compare("text:") != 0)
+            strTxComment = "text:" + strTxComment;
+        if (strTxComment.length() > MAX_TXCOMMENT_LEN)
+            strTxComment.resize(MAX_TXCOMMENT_LEN);
+        wtx.mapValue["txcomment"] = strTxComment;
+    }
 
     std::string sNarr;
-    if (params.size() > 6 && params[6].type() != null_type && !params[6].get_str().empty())
-        sNarr = params[6].get_str();
+    if (params.size() > 7 && params[7].type() != null_type && !params[7].get_str().empty())
+        sNarr = params[7].get_str();
 
     if (sNarr.length() > 24)
         throw runtime_error("Narration must be 24 characters or less.");
@@ -942,9 +961,9 @@ Value sendfrom(const Array& params, bool fHelp)
 
 Value sendmany(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() < 2 || params.size() > 4)
+    if (fHelp || params.size() < 2 || params.size() > 5)
         throw runtime_error(
-            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" )\n"
+            "sendmany \"fromaccount\" {\"address\":amount,...} ( minconf \"comment\" \"txcomment\" )\n"
             "\nSend multiple times. Amounts are double-precision floating point numbers."
             + HelpRequiringPassphrase() + "\n"
             "\nArguments:\n"
@@ -956,6 +975,7 @@ Value sendmany(const Array& params, bool fHelp)
             "    }\n"
             "3. minconf                 (numeric, optional, default=1) Only use the balance confirmed at least this many times.\n"
             "4. \"comment\"             (string, optional) A comment\n"
+            "5. \"txcomment\"           (string, optional) A transaction comment visible on chain\n"
             "\nResult:\n"
             "\"transactionid\"          (string) The transaction id for the send. Only 1 transaction is created regardless of \n"
             "                                    the number of addresses.\n"
@@ -978,6 +998,14 @@ Value sendmany(const Array& params, bool fHelp)
     wtx.strFromAccount = strAccount;
     if (params.size() > 3 && params[3].type() != null_type && !params[3].get_str().empty())
         wtx.mapValue["comment"] = params[3].get_str();
+    if (params.size() > 4 && params[4].type() != null_type && !params[4].get_str().empty()) {
+        std::string strTxComment = params[4].get_str();
+        if (strTxComment.substr(0,5).compare("text:") != 0)
+            strTxComment = "text:" + strTxComment;
+        if (strTxComment.length() > MAX_TXCOMMENT_LEN)
+            strTxComment.resize(MAX_TXCOMMENT_LEN);
+        wtx.mapValue["txcomment"] = strTxComment;
+    }
 
     set<CPlatinumAddress> setAddress;
     vector<pair<CScript, int64_t> > vecSend;
