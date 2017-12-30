@@ -461,12 +461,6 @@ void SendCoinsDialog::updateTabsAndLabels()
 {
     setupTabChain(0);
     coinControlUpdateLabels();
-    
-    if (nBestHeight >= HEIGHT_TXCOMMENT) {
-        ui->editTxComment->setEnabled(true);
-    } else {
-        ui->editTxComment->setEnabled(false);
-    }
 }
 
 void SendCoinsDialog::removeEntry(SendCoinsEntry* entry)
