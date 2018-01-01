@@ -341,7 +341,8 @@ int64_t GetMinFee(const CTransaction& tx, unsigned int nBytes, bool fAllowFree, 
 class CTransaction
 {
 public:
-    static const int LEGACY_VERSION1=1; // txcomment introduced in V2
+    static const int LEGACY_VERSION1=1;
+    static const int LEGACY_VERSION2=2; // txcomment introduced in V2
     static const int CURRENT_VERSION=2;
     int nVersion;
     unsigned int nTime;
@@ -372,8 +373,9 @@ public:
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
-        if (this->nVersion > LEGACY_VERSION1)
+        if (this->nVersion >= LEGACY_VERSION2 && nBestHeight >= HEIGHT_TXCOMMENT) {
             READWRITE(strTxComment);
+        }
     )
 
     void SetNull()
@@ -468,7 +470,7 @@ public:
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
-        if (a.nVersion > LEGACY_VERSION1 || b.nVersion > LEGACY_VERSION1) {
+        if (a.nVersion >= LEGACY_VERSION2 || b.nVersion >= LEGACY_VERSION2) {
             return (a.nVersion     == b.nVersion &&
                     a.nTime        == b.nTime &&
                     a.vin          == b.vin &&
