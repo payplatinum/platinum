@@ -342,7 +342,7 @@ class CTransaction
 {
 public:
     static const int LEGACY_VERSION1=1;
-    static const int LEGACY_VERSION2=2; // txcomment introduced in V2
+    static const int LEGACY_VERSION2=2; // txcomment introduced in V2 (Note: Old Coinbase txs can also be V2)
     static const int CURRENT_VERSION=2;
     int nVersion;
     unsigned int nTime;
