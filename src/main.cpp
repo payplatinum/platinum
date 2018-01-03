@@ -1393,7 +1393,7 @@ bool CBlock::ReadFromDisk(const CBlockIndex* pindex, bool fReadTransactions)
         *this = pindex->GetBlockHeader();
         return true;
     }
-    if (!ReadFromDisk(pindex->nFile, pindex->nBlockPos, fReadTransactions))
+    if (!ReadFromDisk(pindex->nFile, pindex->nBlockPos, fReadTransactions, pindex->nHeight))
         return false;
     if (GetHash() != pindex->GetBlockHash())
         return error("CBlock::ReadFromDisk() : GetHash() doesn't match index");
@@ -4270,6 +4270,10 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
 
     else if (strCommand == "block" && !fImporting && !fReindex) // Ignore blocks received while importing
     {
+        if (nBestHeight < HEIGHT_TXCOMMENT) {
+            vRecv.SetType(vRecv.GetType()|SER_LEGACY_PROTOCOL);
+        }
+
         CBlock block;
         vRecv >> block;
         uint256 hashBlock = block.GetHash();

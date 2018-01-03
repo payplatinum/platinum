@@ -373,7 +373,7 @@ public:
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
-        if (this->nVersion >= LEGACY_VERSION2 && nBestHeight >= HEIGHT_TXCOMMENT) {
+        if (!(nType & SER_LEGACY_PROTOCOL)) {
             READWRITE(strTxComment);
         }
     )
@@ -935,7 +935,7 @@ public:
         return true;
     }
 
-    bool ReadFromDisk(unsigned int nFile, unsigned int nBlockPos, bool fReadTransactions=true)
+    bool ReadFromDisk(unsigned int nFile, unsigned int nBlockPos, bool fReadTransactions=true, int nHeight=0)
     {
         SetNull();
 
@@ -945,6 +945,10 @@ public:
             return error("CBlock::ReadFromDisk() : OpenBlockFile failed");
         if (!fReadTransactions)
             filein.nType |= SER_BLOCKHEADERONLY;
+
+        // Some legacy coinbase txns are version 2. Avoid sending strTxComment.
+        if (nHeight && nHeight < HEIGHT_TXCOMMENT)
+            filein.nType |= SER_LEGACY_PROTOCOL;
 
         // Read block
         try {
