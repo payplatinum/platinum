@@ -935,7 +935,7 @@ public:
         return true;
     }
 
-    bool ReadFromDisk(unsigned int nFile, unsigned int nBlockPos, bool fReadTransactions=true, int nHeight=0)
+    bool ReadFromDisk(unsigned int nFile, unsigned int nBlockPos, bool fReadTransactions=true, int nHeight=HEIGHT_TXCOMMENT)
     {
         SetNull();
 
@@ -947,7 +947,7 @@ public:
             filein.nType |= SER_BLOCKHEADERONLY;
 
         // Some legacy coinbase txns are version 2. Avoid sending strTxComment.
-        if (nHeight && nHeight < HEIGHT_TXCOMMENT)
+        if (nHeight < HEIGHT_TXCOMMENT)
             filein.nType |= SER_LEGACY_PROTOCOL;
 
         // Read block
