@@ -373,8 +373,9 @@ public:
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
-        if (!(nType & SER_LEGACY_PROTOCOL) && this->nVersion >= LEGACY_VERSION2) {
-            READWRITE(strTxComment);
+        if (this->nVersion >= LEGACY_VERSION2 && nBestHeight >= HEIGHT_TXCOMMENT) {
+            if (!(nType & SER_LEGACY_PROTOCOL))
+                READWRITE(strTxComment);
         }
     )
 
