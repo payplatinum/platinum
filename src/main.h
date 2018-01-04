@@ -910,7 +910,7 @@ public:
     }
 
 
-    bool WriteToDisk(unsigned int& nFileRet, unsigned int& nBlockPosRet)
+    bool WriteToDisk(unsigned int& nFileRet, unsigned int& nBlockPosRet, int nHeight=HEIGHT_TXCOMMENT)
     {
         // Open history file to append
         CAutoFile fileout = CAutoFile(AppendBlockFile(nFileRet), SER_DISK, CLIENT_VERSION);
@@ -920,6 +920,10 @@ public:
         // Write index header
         unsigned int nSize = fileout.GetSerializeSize(*this);
         fileout << FLATDATA(Params().MessageStart()) << nSize;
+
+        // Some legacy coinbase txns are version 2. Avoid sending strTxComment.
+        if (nHeight < HEIGHT_TXCOMMENT)
+            fileout.nType |= SER_LEGACY_PROTOCOL;
 
         // Write block
         long fileOutPos = ftell(fileout);
@@ -946,10 +950,10 @@ public:
             return error("CBlock::ReadFromDisk() : OpenBlockFile failed");
         if (!fReadTransactions)
             filein.nType |= SER_BLOCKHEADERONLY;
-
-        // Some legacy coinbase txns are version 2. Avoid sending strTxComment.
-        if (nHeight < HEIGHT_TXCOMMENT)
-            filein.nType |= SER_LEGACY_PROTOCOL;
+        else
+            // Some legacy coinbase txns are version 2. Avoid sending strTxComment.
+            if (nHeight < HEIGHT_TXCOMMENT)
+                filein.nType |= SER_LEGACY_PROTOCOL;
 
         // Read block
         try {

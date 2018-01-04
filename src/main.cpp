@@ -2974,7 +2974,7 @@ bool CBlock::AcceptBlock()
         return error("AcceptBlock() : out of disk space");
     unsigned int nFile = -1;
     unsigned int nBlockPos = 0;
-    if (!WriteToDisk(nFile, nBlockPos))
+    if (!WriteToDisk(nFile, nBlockPos, nHeight))
         return error("AcceptBlock() : WriteToDisk failed");
     if (!AddToBlockIndex(nFile, nBlockPos, hashProof))
         return error("AcceptBlock() : AddToBlockIndex failed");
@@ -3678,6 +3678,9 @@ void static ProcessGetData(CNode* pfrom)
                 {
                     CBlock block;
                     block.ReadFromDisk((*mi).second);
+                    if ((*mi).second->nHeight < HEIGHT_TXCOMMENT) {
+                        pfrom->ssSend.SetType(pfrom->ssSend.GetType()|SER_LEGACY_PROTOCOL);
+                    }
                     pfrom->PushMessage("block", block);
 
                     // Trigger them to send a getblocks request for the next batch of inventory
