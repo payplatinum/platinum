@@ -2865,8 +2865,12 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         return DoS(100, error("CheckBlock() : out-of-bounds SigOpCount"));
 
     // Check merkle root
-    if (fCheckMerkleRoot && hashMerkleRoot != BuildMerkleTree())
-        return DoS(100, error("CheckBlock() : hashMerkleRoot mismatch"));
+    // If this is an orphan from the future during IBD, and nBestHeight is below HEIGHT_TXCOMMENT, we need to
+    // skip the merkle check, because all tx.strTxComment data will be stripped when the merkle hash is built.
+    if (nBestHeight > HEIGHT_TXCOMMENT || mapBlockIndex.count(hashPrevBlock)) {
+        if (fCheckMerkleRoot && hashMerkleRoot != BuildMerkleTree())
+            return DoS(100, error("CheckBlock() : hashMerkleRoot mismatch"));
+    }
 
 
     return true;
@@ -3141,6 +3145,9 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
             CBlock block;
             {
                 CDataStream ss(mi->second->vchBlock, SER_DISK, CLIENT_VERSION);
+                if (nBestHeight < HEIGHT_TXCOMMENT - 1) {
+                    ss.SetType(ss.GetType()|SER_LEGACY_PROTOCOL);
+                }
                 ss >> block;
             }
             block.BuildMerkleTree();
@@ -4273,7 +4280,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
 
     else if (strCommand == "block" && !fImporting && !fReindex) // Ignore blocks received while importing
     {
-        if (nBestHeight < HEIGHT_TXCOMMENT) {
+        if (nBestHeight < HEIGHT_TXCOMMENT - 1) {
             vRecv.SetType(vRecv.GetType()|SER_LEGACY_PROTOCOL);
         }
 
