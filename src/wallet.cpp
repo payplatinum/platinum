@@ -1195,7 +1195,9 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
 void CWallet::ReacceptWalletTransactions()
 {
     CTxDB txdb("r");
-    bool fRepeat = true;
+    // Can't reaccept wallet txns unless nBestHeight is at least HEIGHT_TXCOMMENT
+    // becuase the wtx hash will potentially be incorrect.
+    bool fRepeat = (nBestHeight >= HEIGHT_TXCOMMENT);
     while (fRepeat)
     {
         LOCK2(cs_main, cs_wallet);

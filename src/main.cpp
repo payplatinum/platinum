@@ -2867,7 +2867,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
     // Check merkle root
     // If this is an orphan from the future during IBD, and nBestHeight is below HEIGHT_TXCOMMENT, we need to
     // skip the merkle check, because all tx.strTxComment data will be stripped when the merkle hash is built.
-    if (nBestHeight > HEIGHT_TXCOMMENT || mapBlockIndex.count(hashPrevBlock)) {
+    if (nBestHeight >= HEIGHT_TXCOMMENT || mapBlockIndex.count(hashPrevBlock)) {
         if (fCheckMerkleRoot && hashMerkleRoot != BuildMerkleTree())
             return DoS(100, error("CheckBlock() : hashMerkleRoot mismatch"));
     }
