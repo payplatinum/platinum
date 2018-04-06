@@ -1215,6 +1215,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                fprintf(ConfFile, "addnode=plt.cash\n");
                fprintf(ConfFile, "addnode=pool.plt.cash\n");
                fprintf(ConfFile, "addnode=188.19.126.194\n");
+               fprintf(ConfFile, "addnode=188.19.113.202\n");
                fprintf(ConfFile, "addnode=block.plt.cash\n");
 
 
