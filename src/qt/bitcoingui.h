@@ -20,7 +20,8 @@ class MasternodeManager;
 class MessagePage;
 class MessageModel;
 class BlockBrowser;
-class tradingDialog;
+//class tradingDialog;
+class anim_menubar;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -68,6 +69,8 @@ private:
     QToolBar *toolbar;
 
     QStackedWidget *centralStackedWidget;
+    QStackedWidget *MenuBarWidget;
+    anim_menubar *anim_menu;
 
     QWidget *overviewWidget;
     QScrollArea *overviewScroll;
@@ -81,7 +84,7 @@ private:
     MessagePage *messagePage;
     QLabel* netLabel;
     BlockBrowser *blockBrowser;
-    tradingDialog   *tradingDialogPage;
+    //tradingDialog   *tradingDialogPage;
     QLabel *labelEncryptionIcon;
     QLabel *labelStakingIcon;
     QLabel *labelConnectionsIcon;
@@ -115,6 +118,40 @@ private:
     QAction *blockAction;
     QAction *TradingAction;
     QAction *showBackupsAction;
+    QAction *optionsButtonAction;
+
+    //QAction *subActionOverview01;
+    //QAction *subActionOverview02;
+    //QAction *subActionOverview03;
+    //QAction *subActionOverview04;
+    //QAction *subActionSendCoins01;
+    //QAction *subActionSendCoins02;
+    //QAction *subActionSendCoins03;
+    //QAction *subActionSendCoins04;
+    //QAction *subActionReceiveCoins01;
+    //QAction *subActionReceiveCoins02;
+    //QAction *subActionReceiveCoins03;
+    //QAction *subActionReceiveCoins04;
+    //QAction *subActionHistoryAction01;
+    //QAction *subActionHistoryAction02;
+    //QAction *subActionHistoryAction03;
+    //QAction *subActionHistoryAction04;
+    //QAction *subActionAddressBookAction01;
+    //QAction *subActionAddressBookAction02;
+    //QAction *subActionAddressBookAction03;
+    //QAction *subActionAddressBookAction04;
+    //QAction *subActionMasternodeManagerAction01;
+    //QAction *subActionMasternodeManagerAction02;
+    //QAction *subActionMasternodeManagerAction03;
+    //QAction *subActionMasternodeManagerAction04;
+    //QAction *subActionMessageAction01;
+    //QAction *subActionMessageAction02;
+    //QAction *subActionMessageAction03;
+    //QAction *subActionMessageAction04;
+    //QAction *subActionBlockAction01;
+    //QAction *subActionBlockAction02;
+    //QAction *subActionBlockAction03;
+    //QAction *subActionBlockAction04;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
@@ -181,8 +218,8 @@ private slots:
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage();
-   /** Switch to trading page */
-    void gotoTradingPage();
+   /** Switch to page */
+    //void gotoTradingPage();
     /** Switch to block explorer*/
     void gotoBlockBrowser();
     /** Switch to masternode manager page*/
