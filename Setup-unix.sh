@@ -4,8 +4,8 @@ apt install git build-essential libtool automake autotools-dev autoconf pkg-conf
 add-apt-repository ppa:bitcoin/bitcoin
 apt update
 apt install libdb4.8-dev libdb4.8++-dev
-git clone https://github.com/payplatinum/platinum
-cd platinum
+#git clone https://github.com/payplatinum/platinum
+#cd platinum
 U=$PWD
 #if you want compile Platinum in root dir, uncomment next line
 #chmod -R 755 /root
@@ -40,4 +40,4 @@ cd $U
 chmod -R 755 *
 qmake -qt=qt5
 #add -jN (where N number of CPU cores) after make
-make
+make -j4

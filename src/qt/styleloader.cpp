@@ -7,7 +7,7 @@
 void StyleLoader::attach(const QString &filename, QKeySequence key)
 {
     StyleLoader *loader = new StyleLoader(qApp, filename, key);
-    qApp->installEventFilter(loader);
+    //qApp->installEventFilter(loader);   // bug - bad hook
     loader->setAppStyleSheet();
 }
 
@@ -28,7 +28,7 @@ void StyleLoader::setAppStyleSheet()
     QFile file(m_filename);
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << "Cannot open styleshit file " << m_filename;
+        qDebug() << "Cannot open stylesheet file " << m_filename;
         return;
     }
     QString stylesheet = QString::fromUtf8(file.readAll());

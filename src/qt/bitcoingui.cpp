@@ -100,15 +100,20 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     nWeight(0)
 {
     resize(900, 520);
-    // add style
-    //QFile file(QApplication::applicationDirPath() + "/StyleSheetController_utf8.qss");
-    //if (file.open(QFile::ReadOnly))
-    //{
-    //    QString StyleSheet = QLatin1String(file.readAll());
-    //    qApp->setStyleSheet(StyleSheet);
-    //}
 
-    StyleLoader::attach("StyleSheetController_utf8.qss", QKeySequence("F5"));
+    // add style
+    QString m_filename = "StyleSheetController_utf8.qss";
+    QFile file(m_filename);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        //qDebug() << "Cannot open stylesheet file " << m_filename;
+        return;
+    }
+    QString stylesheet = QString::fromUtf8(file.readAll());
+    qApp->setStyleSheet(stylesheet);
+
+
+    //StyleLoader::attach("StyleSheetController_utf8.qss", QKeySequence("F5"));
     setWindowTitle(tr("Platinum") + " - " + tr("Wallet"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/bitcoin"));

@@ -10,6 +10,7 @@ public:
     bool eventFilter(QObject *obj, QEvent *event);
 private:
     StyleLoader(QObject *parent, const QString& filename, const QKeySequence& key);
+    //StyleLoader(QObject *parent, const QString& filename);
     void setAppStyleSheet();
     static QString defaultStyleFile();
     QString m_filename;
