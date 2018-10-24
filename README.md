@@ -33,6 +33,8 @@ RPC Port: 10257
 
 BUILD LINUX
 -----------
+!!! Strongly recommended to use binary mxe instead of compiling from sources, because problems are possible. http://pkg.mxe.cc/ 
+
 1) git clone https://github.com/payplatinum/platinum/
 
 2) cd platinum/src

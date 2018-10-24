@@ -1,8 +1,6 @@
-To setup wallet "Platinum", open shell and type "sudo Setup-unix.sh". If you
+To setup wallet "Platinum", run the script Setup-unix.sh as a root user. If you
 
-haven't root, type "sudo passwd root", and set any password(DON'T FORGET THAT PASS), and type
-
-"sudo Setup-unix.sh" again.
+haven't root, open shell and type "sudo passwd root", and set any password(DON'T FORGET THAT PASS).
 
 After that, a shortcut will be created in your home directory. The first time
 
