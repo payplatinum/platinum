@@ -110,7 +110,7 @@ static const int64_t VELOCITY_TOGGLE = 120; // Implementation of the Velocity sy
 /** Velocity retarget toggle block */
 static const int64_t VELOCITY_TDIFF = 0; // Use Velocity's retargetting method.
 /** Protocol toggle */
-inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1493596800; } // Mon, 01 May 2017 00:00:00 GMT
+inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1537866600; } // Mon, 01 May 2017 00:00:00 GMT
 /** Reward Fix toggle */
 static const int64_t RWRD_FIX_TOGGLE = 827;
 /** MN Reward Fix toggle */
@@ -134,9 +134,9 @@ static const unsigned int nStakeMinAge = 2 / 60; // 30 minutes
 /** Time to elapse before new modifier is computed */
 static const unsigned int nModifierInterval = 2 * 60;
 /** Genesis Start Time */
-static const unsigned int timeGenesisBlock = 1493596800; // Mon, 01 May 2017 00:00:00 GMT
+static const unsigned int timeGenesisBlock = 1537866600; // Mon, 01 May 2017 00:00:00 GMT
 /** Genesis RegNet Start Time */
-static const unsigned int timeRegNetGenesis = 1493596800; // Mon, 01 May 2017 00:00:00 GMT
+static const unsigned int timeRegNetGenesis = 1537866600; // Mon, 01 May 2017 00:00:00 GMT
 /** Genesis Nonce */
 static const unsigned int nNonceMain = 0;
 /** Genesis Nonce Testnet */
@@ -144,7 +144,7 @@ static const unsigned int nNonceTest = 0;
 /** Genesis block subsidy */
 static const int64_t nGenesisBlockReward = 1 * COIN;
 /** Reserve block subsidy */
-static const int64_t nBlockRewardReserve = 900000 * COIN; //
+static const int64_t nBlockRewardReserve = 15000000 * COIN; //
 /** Starting block subsidy */
 static const int64_t nBlockPoWReward = 1 * COIN;
 /** Superblock subsidy */
@@ -156,13 +156,13 @@ static const int64_t nReservePhaseStart = 1;
 /** Reserve Phase end block */ 
 static const int64_t nReservePhaseEnd = 12; // 
 /** Main Net Genesis Block */
-static const uint256 nGenesisBlock("0x000011b218cb999dad050708bbf9c540abeb67e69b57baec07943359c4533c62");
+static const uint256 nGenesisBlock("0x0000032d85a53bb0874b50b819f5f88af3040adbbc1acc9437f24d21cf23a8b3");
 /** Test Net Genesis Block */
-static const uint256 hashTestNetGenesisBlock("0x000040a90f2c00a568353af5b41198ce876cd007d753d032044fec2318424e2d");
+static const uint256 hashTestNetGenesisBlock("0x0000032d85a53bb0874b50b819f5f88af3040adbbc1acc9437f24d21cf23a8b3");
 /** Reg Net Genesis Block */
-static const uint256 hashRegNetGenesisBlock("0x5fb7d31ee98fc0cfb5fd002b9f711d6cd36930fd4a858183e8f7759d976b1b28");
+static const uint256 hashRegNetGenesisBlock("0x0000032d85a53bb0874b50b819f5f88af3040adbbc1acc9437f24d21cf23a8b3");
 /** Genesis Merkleroot */
-static const uint256 nGenesisMerkle("0x5d32ca2bb29cf63a3b84eed891fb50d846be5e6dde7cf0e7272f56e89dd360f3");
+static const uint256 nGenesisMerkle("0x167f1f07de3d787583d1226dce4ab335265a876a6678c09eed4bd8836210755c");
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
