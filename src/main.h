@@ -110,7 +110,7 @@ static const int64_t VELOCITY_TOGGLE = 120; // Implementation of the Velocity sy
 /** Velocity retarget toggle block */
 static const int64_t VELOCITY_TDIFF = 0; // Use Velocity's retargetting method.
 /** Protocol toggle */
-inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1552562319; } // Thursday, 14 March 2019 г., 11:18:39
+inline bool IsProtocolV3(int64_t nTime) { return TestNet() || nTime > 1552571159; } // Thursday, 14 March 2019 г., 13:45:59
 /** Reward Fix toggle */
 static const int64_t RWRD_FIX_TOGGLE = 827;
 /** MN Reward Fix toggle */
@@ -134,9 +134,9 @@ static const unsigned int nStakeMinAge = 2 / 60; // 30 minutes
 /** Time to elapse before new modifier is computed */
 static const unsigned int nModifierInterval = 2 * 60;
 /** Genesis Start Time */
-static const unsigned int timeGenesisBlock = 1552562319; // Thursday, 14 March 2019 г., 11:18:39
+static const unsigned int timeGenesisBlock = 1552571159; // Thursday, 14 March 2019 г., 13:45:59
 /** Genesis RegNet Start Time */
-static const unsigned int timeRegNetGenesis = 1552562319; // Thursday, 14 March 2019 г., 11:18:39
+static const unsigned int timeRegNetGenesis = 1552571159; // Thursday, 14 March 2019 г., 13:45:59
 /** Genesis Nonce */
 static const unsigned int nNonceMain = 0;
 /** Genesis Nonce Testnet */
