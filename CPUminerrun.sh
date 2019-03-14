@@ -14,7 +14,7 @@ while read LINE
 	touch /usr/bin/${US}${I}Run.sh
 	chmod 755 /usr/bin/${US}${I}Run.sh
    		echo '#!/bin/sh' > /usr/bin/${US}${I}Run.sh
-   		echo cpuminer -a X11 -o http://127.0.0.1:10201 --userpass=${US}:${PS} >> /usr/bin/${US}${I}Run.sh
+   		echo cpuminer -a X11 -o http://127.0.0.1:10257 --userpass=${US}:${PS} >> /usr/bin/${US}${I}Run.sh
 	cd /lib/systemd/system
 	touch ${US}${I}Run.service
    	chmod 755 ${US}${I}Run.service

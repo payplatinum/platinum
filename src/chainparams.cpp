@@ -52,8 +52,8 @@ public:
         pchMessageStart[2] = 0x2e;
         pchMessageStart[3] = 0xf9;
         vAlertPubKey = ParseHex("04c244288a8c6ebbf491443ebfa1207275d71cb009f201c118b00cf8e77641c7f1e63e330ba909842c009af375c0f5c1c7368e8d7e2066168c40ce3cb629cf212f");
-        nDefaultPort = 49005;
-        nRPCPort = 49006;
+        nDefaultPort = 10255;
+        nRPCPort = 10257;
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> 18);
         bnProofOfStakeLimit = CBigNum(~uint256(0) >> 18);
         const char* pszTimestamp = "platinum";
@@ -64,12 +64,12 @@ public:
         vout.resize(1);
         vout[0].nValue = nGenesisBlockReward;
         vout[0].SetEmpty();
-        CTransaction txNew(1, 1537866600, vin, vout, 0, "");
+        CTransaction txNew(1, 1552571159, vin, vout, 0, "");
         genesis.vtx.push_back(txNew);
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime    = 1537866600; // Mon, 01 May 2017 00:00:00 GMT
+        genesis.nTime    = 1552571159; // Mon, 01 May 2017 00:00:00 GMT
         genesis.nBits    = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce   = 1897654;
 
@@ -157,7 +157,7 @@ public:
         strDataDir = "testnet";
 
         // Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime  = 1537866600;
+        genesis.nTime  = 1552571159;
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce = 1989449;
 
@@ -199,7 +199,7 @@ public:
         pchMessageStart[2] = 0x4f;
         pchMessageStart[3] = 0x3e;
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> 1);
-        genesis.nTime = 1537866600;
+        genesis.nTime = 1552571159;
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce = 1897655;
         hashGenesisBlock = genesis.GetHash();

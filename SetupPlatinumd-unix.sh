@@ -14,24 +14,22 @@ cd /usr/bin
    echo '#!/bin/sh' > PlatinumAutorun.sh
    echo 'Platinumd -daemon' >> PlatinumAutorun.sh
 cd /lib/systemd/system
-   touch runplatinarun.service
-   chmod 755 runplatinarun.service
-   echo '[Unit]' > runplatinarun.service
-   echo 'Description=PlatinumAutorunScript' >> runplatinarun.service
-   echo 'After=multi-user.target' >> runplatinarun.service
+   touch Runplatinum.service
+   chmod 755 Runplatinum.service
+   echo '[Unit]' > Runplatinum.service
+   echo 'Description=PlatinumAutorunScript' >> Runplatinum.service
+   echo 'After=multi-user.target' >> Runplatinum.service
 
-   echo '[Service]' >> runplatinarun.service
-   echo 'Type=forking' >> runplatinarun.service
-   echo 'User=root' >> runplatinarun.service
-   echo 'ExecStart=/usr/bin/PlatinumAutorun.sh' >> runplatinarun.service
-   echo 'OOMScoreAdjust=-100' >> runplatinarun.service
+   echo '[Service]' >> Runplatinum.service
+   echo 'Type=forking' >> Runplatinum.service
+   echo 'User=root' >> Runplatinum.service
+   echo 'ExecStart=/usr/bin/PlatinumAutorun.sh' >> Runplatinum.service
+   echo 'OOMScoreAdjust=-100' >> Runplatinum.service
 
-   echo '[Install]' >> runplatinarun.service
-   echo 'WantedBy=multi-user.target' >> runplatinarun.service
-
+   echo '[Install]' >> Runplatinum.service
+   echo 'WantedBy=multi-user.target' >> Runplatinum.service
+   
    systemctl enable runplatinarun
    systemctl start runplatinarun
    systemctl daemon-reload
-
-
 
