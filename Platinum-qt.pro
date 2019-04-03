@@ -17,7 +17,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 win32{
-BOOST_LIB_SUFFIX=-mgw63-mt-s-1_63
+BOOST_LIB_SUFFIX=-mt
 BOOST_INCLUDE_PATH=C:/deps/boost_1_63_0
 BOOST_LIB_PATH=C:/deps/boost_1_63_0/stage/lib
 BDB_INCLUDE_PATH=C:/deps/db-6.2.23.NC/build_unix

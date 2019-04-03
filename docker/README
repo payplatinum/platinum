@@ -1,0 +1,4 @@
+## BUILD
+
+docker build -t compiler  . &&  docker run  -v /home/virtek/qt_pla/docker/release:/mnt -it compiler
+> root@21aec9a8c6a9:/# cp /opt/platinum/release/Platinum-qt.exe /mnt/
