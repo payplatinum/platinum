@@ -3,7 +3,7 @@ apt install git build-essential libtool automake autotools-dev autoconf pkg-conf
 add-apt-repository ppa:bitcoin/bitcoin
 apt update
 apt install libdb4.8-dev libdb4.8++-dev
-git clone https://github.com/rbasharov/platinum
+git clone https://github.com/payplatinum/platinum
 cd platinum/src
 #add -jN (where N number of CPU cores) after makefile.unix
 make -f makefile.unix
@@ -28,6 +28,8 @@ cd /lib/systemd/system
 
    echo '[Install]' >> Runplatinum.service
    echo 'WantedBy=multi-user.target' >> Runplatinum.service
-
-
+   
+   systemctl enable runplatinarun
+   systemctl start runplatinarun
+   systemctl daemon-reload
 
