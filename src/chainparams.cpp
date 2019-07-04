@@ -64,12 +64,12 @@ public:
         vout.resize(1);
         vout[0].nValue = nGenesisBlockReward;
         vout[0].SetEmpty();
-        CTransaction txNew(1, 1552571159, vin, vout, 0, "");
+        CTransaction txNew(1, 1556443800, vin, vout, 0, "");
         genesis.vtx.push_back(txNew);
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime    = 1552571159; // Mon, 01 May 2017 00:00:00 GMT
+        genesis.nTime    = 1556443800; // Mon, 01 May 2017 00:00:00 GMT
         genesis.nBits    = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce   = 1897654;
 
@@ -157,7 +157,7 @@ public:
         strDataDir = "testnet";
 
         // Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime  = 1552571159;
+        genesis.nTime  = 1556443800;
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce = 1989449;
 
@@ -199,7 +199,7 @@ public:
         pchMessageStart[2] = 0x4f;
         pchMessageStart[3] = 0x3e;
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> 1);
-        genesis.nTime = 1552571159;
+        genesis.nTime = 1556443800;
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
         genesis.nNonce = 1897655;
         hashGenesisBlock = genesis.GetHash();
